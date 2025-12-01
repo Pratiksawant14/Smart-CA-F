@@ -1,0 +1,53 @@
+ZOMATO ORDER,Food
+Zomato - Order #123456,Food
+Butter Chicken ₹350.00,Food
+Garlic Naan (2),Food
+Delivery Fee ₹40,Food
+Swiggy delivery,Food
+Restaurant bill,Food
+Dominos pizza,Food
+KFC chicken,Food
+Pizza order,Food
+UBER TRIP RECEIPT,Transport
+Uber ride,Transport
+Trip ID: ABC123XYZ,Transport
+Base Fare ₹50.00,Transport
+Distance (12 km) ₹120.00,Transport
+Time (25 min) ₹30.00,Transport
+TOTAL FARE,Transport
+Ola ride,Transport
+Taxi fare ₹200,Transport
+AMAZON INDIA,Office Supplies
+Amazon purchase,Office Supplies
+Logitech Mouse ₹899.00,Office Supplies
+USB-C Cable 2m ₹249.00,Office Supplies
+Notebook Set (5) ₹350.00,Office Supplies
+Printer cartridge ₹1200,Office Supplies
+Invoice Date: 13/11/2024,Office Supplies
+Subtotal ₹1,498.00,Office Supplies
+Shipping FREE,Office Supplies
+ADOBE CREATIVE CLOUD,Software
+Adobe subscription,Software
+Invoice #: INV-2024-123,Software
+Subscription: Nov 2024,Software
+Adobe Photoshop ₹834.00,Software
+Cloud Storage 20GB Included,Software
+Figma subscription,Software
+AWS hosting charges,Software
+Domain renewal ₹499,Software
+Electricity bill ₹2,300.00,Utilities
+Internet broadband,Utilities
+Mobile recharge ₹199,Utilities
+Health insurance,Health
+Doctor consultation,Health
+Gym membership ₹999,Health
+Accountant fees,Professional Services
+GST filing,Professional Services
+Office rent,Rent
+Maintenance charges,Rent
+Client payment received,Income
+Invoice payment,Income
+Bank charges,Banking
+ATM withdrawal,Banking
+Mutual fund,Investment
+SIP investment,Investment
