@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import { API_BASE_URL } from '../config'
 
 export default function NotificationBell() {
   const [notifications, setNotifications] = useState([])
@@ -10,19 +11,19 @@ export default function NotificationBell() {
 
   useEffect(() => {
     fetchNotifications()
-    
+
     // Fetch periodically
     const interval = setInterval(fetchNotifications, 60000) // Every minute
-    
+
     // Close dropdown on outside click
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowDropdown(false)
       }
     }
-    
+
     document.addEventListener('mousedown', handleClickOutside)
-    
+
     return () => {
       clearInterval(interval)
       document.removeEventListener('mousedown', handleClickOutside)
@@ -34,7 +35,7 @@ export default function NotificationBell() {
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) return
 
-      const response = await fetch('http://localhost:5000/api/notifications', {
+      const response = await fetch(`${API_BASE_URL}/api/notifications`, {
         headers: {
           'Authorization': `Bearer ${session.access_token}`
         }
@@ -55,7 +56,7 @@ export default function NotificationBell() {
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) return
 
-      const response = await fetch(`http://localhost:5000/api/notifications/${notificationId}/read`, {
+      const response = await fetch(`${API_BASE_URL}/api/notifications/${notificationId}/read`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${session.access_token}`
@@ -64,7 +65,7 @@ export default function NotificationBell() {
 
       if (response.ok) {
         // Update local state
-        setNotifications(notifications.map(n => 
+        setNotifications(notifications.map(n =>
           n.id === notificationId ? { ...n, is_read: true } : n
         ))
         setUnreadCount(Math.max(0, unreadCount - 1))
@@ -128,7 +129,7 @@ export default function NotificationBell() {
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
         </svg>
-        
+
         {/* Unread Badge */}
         {unreadCount > 0 && (
           <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
@@ -163,9 +164,8 @@ export default function NotificationBell() {
                 {notifications.map((notification) => (
                   <div
                     key={notification.id}
-                    className={`p-4 hover:bg-gray-50 transition-colors cursor-pointer ${
-                      !notification.is_read ? 'bg-blue-50' : ''
-                    }`}
+                    className={`p-4 hover:bg-gray-50 transition-colors cursor-pointer ${!notification.is_read ? 'bg-blue-50' : ''
+                      }`}
                     onClick={() => !notification.is_read && markAsRead(notification.id)}
                   >
                     <div className="flex items-start space-x-3">

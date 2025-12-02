@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
+import { API_BASE_URL } from '../config'
 
 export default function UploadPage({ session }) {
   const navigate = useNavigate()
@@ -12,18 +13,18 @@ export default function UploadPage({ session }) {
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0]
-    
+
     if (selectedFile) {
       // Validate file size (max 5MB)
       if (selectedFile.size > 5 * 1024 * 1024) {
         setError('File size must be less than 5MB')
         return
       }
-      
+
       setFile(selectedFile)
       setError(null)
       setResult(null)
-      
+
       // Create preview
       const reader = new FileReader()
       reader.onloadend = () => {
@@ -46,7 +47,7 @@ export default function UploadPage({ session }) {
     try {
       // Get the current user's auth token
       const { data: { session: currentSession } } = await supabase.auth.getSession()
-      
+
       if (!currentSession) {
         setError('Not authenticated. Please log in again.')
         return
@@ -59,7 +60,7 @@ export default function UploadPage({ session }) {
       formData.append('file', file)
 
       // Send to Flask backend
-      const response = await fetch('http://localhost:5000/api/upload_and_process', {
+      const response = await fetch(`${API_BASE_URL}/api/upload_and_process`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -74,7 +75,7 @@ export default function UploadPage({ session }) {
       }
 
       setResult(data)
-      
+
       // Clear the form after successful upload
       setTimeout(() => {
         navigate('/dashboard')
@@ -145,9 +146,9 @@ export default function UploadPage({ session }) {
               <div className="space-y-1 text-center">
                 {preview ? (
                   <div className="mb-4">
-                    <img 
-                      src={preview} 
-                      alt="Preview" 
+                    <img
+                      src={preview}
+                      alt="Preview"
                       className="mx-auto max-h-64 rounded-lg shadow-md"
                     />
                   </div>

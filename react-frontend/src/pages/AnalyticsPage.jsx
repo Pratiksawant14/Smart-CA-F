@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart } from 'recharts'
+import { API_BASE_URL } from '../config'
 
 export default function AnalyticsPage({ session }) {
   const navigate = useNavigate()
@@ -19,7 +20,7 @@ export default function AnalyticsPage({ session }) {
       setError(null)
 
       const { data: { session: currentSession } } = await supabase.auth.getSession()
-      
+
       if (!currentSession) {
         setError('Not authenticated')
         return
@@ -27,7 +28,7 @@ export default function AnalyticsPage({ session }) {
 
       const token = currentSession.access_token
 
-      const response = await fetch('http://localhost:5000/api/analytics', {
+      const response = await fetch(`${API_BASE_URL}/api/analytics`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -209,7 +210,7 @@ export default function AnalyticsPage({ session }) {
                 <span className="text-2xl font-bold text-gray-900">{analytics.volatility.score.toFixed(1)}/100</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-4">
-                <div 
+                <div
                   className={`h-4 rounded-full transition-all ${getVolatilityColor(analytics.volatility.score)}`}
                   style={{ width: `${Math.min(analytics.volatility.score, 100)}%` }}
                 ></div>
@@ -256,13 +257,12 @@ export default function AnalyticsPage({ session }) {
               <div className="space-y-3">
                 <h3 className="font-semibold text-gray-900 mb-3">⚠️ Alerts & Anomalies</h3>
                 {analytics.volatility.alerts.map((alert, index) => (
-                  <div 
-                    key={index} 
-                    className={`p-4 rounded-lg border-l-4 ${
-                      alert.severity === 'critical' ? 'bg-red-50 border-red-500' :
-                      alert.severity === 'high' ? 'bg-orange-50 border-orange-500' :
-                      'bg-yellow-50 border-yellow-500'
-                    }`}
+                  <div
+                    key={index}
+                    className={`p-4 rounded-lg border-l-4 ${alert.severity === 'critical' ? 'bg-red-50 border-red-500' :
+                        alert.severity === 'high' ? 'bg-orange-50 border-orange-500' :
+                          'bg-yellow-50 border-yellow-500'
+                      }`}
                   >
                     <p className="text-sm text-gray-900">{alert.message}</p>
                   </div>
@@ -289,11 +289,10 @@ export default function AnalyticsPage({ session }) {
                 <span className="text-2xl font-bold text-gray-900">{analytics.audit_risk.risk_score}/100</span>
               </div>
               <div className="relative w-full bg-gray-200 rounded-full h-6">
-                <div 
-                  className={`h-6 rounded-full transition-all flex items-center justify-end pr-2 ${
-                    analytics.audit_risk.risk_score < 30 ? 'bg-green-500' :
-                    analytics.audit_risk.risk_score < 60 ? 'bg-yellow-500' : 'bg-red-500'
-                  }`}
+                <div
+                  className={`h-6 rounded-full transition-all flex items-center justify-end pr-2 ${analytics.audit_risk.risk_score < 30 ? 'bg-green-500' :
+                      analytics.audit_risk.risk_score < 60 ? 'bg-yellow-500' : 'bg-red-500'
+                    }`}
                   style={{ width: `${Math.min(analytics.audit_risk.risk_score, 100)}%` }}
                 >
                   <span className="text-white text-xs font-bold">{analytics.audit_risk.risk_score}%</span>
@@ -326,11 +325,10 @@ export default function AnalyticsPage({ session }) {
                         <p className="text-sm text-gray-600">{factor.value}</p>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          factor.impact === 'High' ? 'bg-red-100 text-red-800' :
-                          factor.impact === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-green-100 text-green-800'
-                        }`}>
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${factor.impact === 'High' ? 'bg-red-100 text-red-800' :
+                            factor.impact === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                              'bg-green-100 text-green-800'
+                          }`}>
                           {factor.impact}
                         </span>
                         <span className="text-sm font-bold text-gray-700">+{factor.weight}</span>
@@ -367,17 +365,16 @@ export default function AnalyticsPage({ session }) {
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">Income Forecast</h2>
                 <p className="text-sm text-gray-600 mt-1">
-                  Trend: <span className="font-semibold capitalize">{analytics.forecast.trend}</span> • 
+                  Trend: <span className="font-semibold capitalize">{analytics.forecast.trend}</span> •
                   Confidence: <span className="font-semibold">{analytics.forecast.accuracy}</span>
                 </p>
               </div>
-              <div className={`px-4 py-2 rounded-full font-semibold ${
-                analytics.forecast.trend === 'increasing' ? 'bg-green-100 text-green-800' :
-                analytics.forecast.trend === 'decreasing' ? 'bg-red-100 text-red-800' :
-                'bg-gray-100 text-gray-800'
-              }`}>
+              <div className={`px-4 py-2 rounded-full font-semibold ${analytics.forecast.trend === 'increasing' ? 'bg-green-100 text-green-800' :
+                  analytics.forecast.trend === 'decreasing' ? 'bg-red-100 text-red-800' :
+                    'bg-gray-100 text-gray-800'
+                }`}>
                 {analytics.forecast.trend === 'increasing' ? '📈 Growing' :
-                 analytics.forecast.trend === 'decreasing' ? '📉 Declining' : '➡️ Stable'}
+                  analytics.forecast.trend === 'decreasing' ? '📉 Declining' : '➡️ Stable'}
               </div>
             </div>
 
@@ -398,25 +395,25 @@ export default function AnalyticsPage({ session }) {
                 ]}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
-                  <YAxis tickFormatter={(value) => `₹${(value/1000).toFixed(0)}k`} />
-                  <Tooltip 
+                  <YAxis tickFormatter={(value) => `₹${(value / 1000).toFixed(0)}k`} />
+                  <Tooltip
                     formatter={(value) => `₹${value?.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`}
                     labelStyle={{ color: '#000' }}
                   />
                   <Legend />
-                  <Area 
-                    type="monotone" 
-                    dataKey="actual" 
-                    stroke="#0ea5e9" 
-                    fill="#0ea5e9" 
+                  <Area
+                    type="monotone"
+                    dataKey="actual"
+                    stroke="#0ea5e9"
+                    fill="#0ea5e9"
                     fillOpacity={0.3}
                     name="Actual Income"
                   />
-                  <Area 
-                    type="monotone" 
-                    dataKey="predicted" 
-                    stroke="#8b5cf6" 
-                    fill="#8b5cf6" 
+                  <Area
+                    type="monotone"
+                    dataKey="predicted"
+                    stroke="#8b5cf6"
+                    fill="#8b5cf6"
                     fillOpacity={0.3}
                     strokeDasharray="5 5"
                     name="Predicted Income"
@@ -437,7 +434,7 @@ export default function AnalyticsPage({ session }) {
                         ₹{prediction.predicted_amount.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                       </p>
                       <p className="text-xs text-purple-700">
-                        Range: ₹{prediction.confidence_lower.toLocaleString('en-IN', { maximumFractionDigits: 0 })} - 
+                        Range: ₹{prediction.confidence_lower.toLocaleString('en-IN', { maximumFractionDigits: 0 })} -
                         ₹{prediction.confidence_upper.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                       </p>
                     </div>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import ExplanationCard, { TaxIcons } from '../components/ExplanationCard'
+import { API_BASE_URL } from '../config'
 
 export default function TaxPage({ session }) {
   const navigate = useNavigate()
@@ -19,7 +20,7 @@ export default function TaxPage({ session }) {
       setError(null)
 
       const { data: { session: currentSession } } = await supabase.auth.getSession()
-      
+
       if (!currentSession) {
         setError('Not authenticated')
         return
@@ -27,7 +28,7 @@ export default function TaxPage({ session }) {
 
       const token = currentSession.access_token
 
-      const response = await fetch('http://localhost:5000/api/tax_summary', {
+      const response = await fetch(`${API_BASE_URL}/api/tax_summary`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -157,7 +158,7 @@ export default function TaxPage({ session }) {
           <ExplanationCard
             title="GST Liability"
             value={`₹${taxData?.gst_liability?.toLocaleString('en-IN', { maximumFractionDigits: 0 }) || '0'}`}
-            explanation={taxData?.gst_applicable ? 
+            explanation={taxData?.gst_applicable ?
               `GST is applicable as your income exceeds ₹20 lakhs. You must be GST registered.` :
               `GST registration not required. Your income is below the ₹20 lakh threshold.`
             }
@@ -221,13 +222,12 @@ export default function TaxPage({ session }) {
             <h2 className="text-xl font-bold text-gray-900 mb-4">💡 Tax Recommendations</h2>
             <div className="space-y-3">
               {taxData.recommendations.map((rec, index) => (
-                <div 
+                <div
                   key={index}
-                  className={`p-4 rounded-lg border-l-4 ${
-                    rec.type === 'danger' ? 'bg-red-50 border-red-500' :
+                  className={`p-4 rounded-lg border-l-4 ${rec.type === 'danger' ? 'bg-red-50 border-red-500' :
                     rec.type === 'warning' ? 'bg-yellow-50 border-yellow-500' :
-                    'bg-blue-50 border-blue-500'
-                  }`}
+                      'bg-blue-50 border-blue-500'
+                    }`}
                 >
                   <h3 className="font-semibold text-gray-900 mb-1">{rec.title}</h3>
                   <p className="text-sm text-gray-700">{rec.message}</p>
@@ -245,23 +245,20 @@ export default function TaxPage({ session }) {
               {taxData.tax_calendar.deadlines.map((deadline, index) => (
                 <div key={index} className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                   <div className="flex items-start">
-                    <div className={`flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center ${
-                      deadline.type === 'tax' ? 'bg-purple-100' :
+                    <div className={`flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center ${deadline.type === 'tax' ? 'bg-purple-100' :
                       deadline.type === 'filing' ? 'bg-blue-100' :
-                      'bg-green-100'
-                    }`}>
-                      <svg className={`w-6 h-6 ${
-                        deadline.type === 'tax' ? 'text-purple-600' :
+                        'bg-green-100'
+                      }`}>
+                      <svg className={`w-6 h-6 ${deadline.type === 'tax' ? 'text-purple-600' :
                         deadline.type === 'filing' ? 'text-blue-600' :
-                        'text-green-600'
-                      }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          'text-green-600'
+                        }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                     </div>
-                    <div className="ml-3 flex-1">
-                      <p className="text-sm font-semibold text-gray-900">{deadline.title}</p>
-                      <p className="text-xs text-gray-600 mt-1">{deadline.description}</p>
-                      <p className="text-xs text-gray-500 mt-2">{deadline.date}</p>
+                    <div className="ml-4">
+                      <p className="text-sm font-medium text-gray-900">{deadline.title}</p>
+                      <p className="text-sm text-gray-500">{deadline.date}</p>
                     </div>
                   </div>
                 </div>
