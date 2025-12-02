@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import { useState } from 'react'
+import logo from '../assets/logo.png'
 
 export default function LandingNavbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -11,9 +12,7 @@ export default function LandingNavbar() {
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
                     <Link to="/" className="flex items-center space-x-2">
-                        <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-primary-600 rounded-lg flex items-center justify-center">
-                            <span className="text-white font-bold text-xl">SC</span>
-                        </div>
+                        <img src={logo} alt="Smart CA" className="h-10 w-auto" />
                         <span className="text-xl font-bold text-gray-900">Smart CA</span>
                     </Link>
 
