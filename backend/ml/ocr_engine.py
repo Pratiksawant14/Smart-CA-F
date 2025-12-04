@@ -434,8 +434,8 @@ class EnhancedOCREngine:
         transaction_type = self.detect_transaction_type(text, description)
         
         if not amount:
-            print("No amount found in text even after fallback.")
-            return []
+            print("No amount found in text even after fallback. Defaulting to 0.0")
+            amount = 0.0
         
         print(f"Extracted: Date={date}, Amount={amount}, Desc={description}, Type={transaction_type}")
         

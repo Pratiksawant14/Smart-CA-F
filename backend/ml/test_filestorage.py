@@ -1,12 +1,28 @@
 import sys
 import os
 import io
-from werkzeug.datastructures import FileStorage
 
 # Add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from ml.ocr_engine import EnhancedOCREngine
+
+# Mock FileStorage to avoid dependency issues
+class FileStorage:
+    def __init__(self, stream, filename, content_type):
+        self.stream = stream
+        self.filename = filename
+        self.content_type = content_type
+    
+    def read(self, *args, **kwargs):
+        return self.stream.read(*args, **kwargs)
+        
+    def seek(self, *args, **kwargs):
+        return self.stream.seek(*args, **kwargs)
+
+    def save(self, dst):
+        with open(dst, 'wb') as f:
+            f.write(self.stream.read())
 
 # Path to one known good image
 IMG_PATH = r"C:/Users/PRATIK SAWANT/.gemini/antigravity/brain/23adbae0-73a7-4a24-8f7e-61c387b0ab3e/uploaded_image_0_1764836094194.png"
@@ -32,7 +48,7 @@ def test_filestorage():
     ocr = EnhancedOCREngine()
     
     try:
-        # Simulate app.py behavior
+        # Simulate app.py behavior: seek(0) then extract
         file_storage.seek(0)
         transactions = ocr.extract_transactions(file_storage)
         
