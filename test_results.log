@@ -1,0 +1,30 @@
+
+========================================
+Testing Image 1: uploaded_image_0_1764836094194.png
+========================================
+ [OK] Extracted:
+  - Description: Zomato
+  - Amount: 2470.0
+  - Date: 2025-12-04
+  - Type: expense
+ [CAT] Predicted Category: Food
+
+========================================
+Testing Image 2: uploaded_image_1_1764836094194.png
+========================================
+ [OK] Extracted:
+  - Description: Uber
+  - Amount: 2024.0
+  - Date: 2024-11-14
+  - Type: expense
+ [CAT] Predicted Category: Transport
+
+========================================
+Testing Image 3: uploaded_image_2_1764836094194.png
+========================================
+ [OK] Extracted:
+  - Description: Amazon
+  - Amount: 21498.0
+  - Date: 2024-11-13
+  - Type: expense
+ [CAT] Predicted Category: Shopping

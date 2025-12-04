@@ -18,7 +18,8 @@ def create_training_data():
         'Chocolate', 'Cake', 'Bakery', 'Ice Cream', 'Subway', 'Taco',
         'Diner', 'Bistro', 'Eatery', 'Food Court', 'Canteen', 'Mess',
         'Lunch', 'Dinner', 'Breakfast', 'Snacks', 'Beverages', 'Juice',
-        'Sweet', 'Mithai', 'Haldiram', 'Bikanervala', 'Saravana Bhavan'
+        'Sweet', 'Mithai', 'Haldiram', 'Bikanervala', 'Saravana Bhavan',
+        'Zomato Order', 'Swiggy Order', 'Food Order'
     ]
     training_data['description'].extend(food_keywords)
     training_data['category'].extend(['Food'] * len(food_keywords))
@@ -31,7 +32,8 @@ def create_training_data():
         'Fastag', 'Distance Fare', 'Ride Time', 'Base Fare', 'Access Fee',
         'Trip', 'Travel', 'Ticket', 'IRCTC', 'Vistara', 'SpiceJet',
         'Indian Oil', 'Bharat Petroleum', 'Hindustan Petroleum', 'CNG',
-        'Driver', 'Fare', 'Pass', 'Commute'
+        'Driver', 'Fare', 'Pass', 'Commute',
+        'Uber Trip', 'Ola Trip', 'Cab Ride'
     ]
     training_data['description'].extend(transport_keywords)
     training_data['category'].extend(['Transport'] * len(transport_keywords))
@@ -42,11 +44,13 @@ def create_training_data():
         'Logitech', 'Mouse', 'Keyboard', 'Laptop', 'Monitor', 'USB', 'Cable',
         'Headphones', 'Notebook', 'Pen', 'Paper', 'Stationery', 'Desk',
         'Chair', 'Electronics', 'Gadget', 'Mobile', 'Phone', 'Cover', 'Guard',
-        'Shipping', 'Delivery', 'Order', 'Purchase', 'IKEA', 'Decathlon',
+        'Shipping', 'Delivery', 'Purchase', 'IKEA', 'Decathlon',
         'Nike', 'Adidas', 'Puma', 'Zara', 'H&M', 'Uniqlo', 'Reliance Digital',
         'Croma', 'Vijay Sales', 'Apple Store', 'Samsung', 'Sony', 'Bose',
-        'Printer', 'Ink', 'Toner', 'Stapler', 'Files', 'Folders'
+        'Printer', 'Ink', 'Toner', 'Stapler', 'Files', 'Folders',
+        'Amazon Purchase', 'Flipkart Order'
     ]
+    # Removed generic 'Order' to avoid confusion
     training_data['description'].extend(shopping_keywords)
     training_data['category'].extend(['Shopping'] * len(shopping_keywords))
     

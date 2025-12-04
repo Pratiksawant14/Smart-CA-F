@@ -163,7 +163,7 @@ class EnhancedOCREngine:
         Intelligently extract the TOTAL/MAIN amount, not individual items.
         This is the most critical function.
         """
-        lines = text.split('\n')
+        lines = text.split('\\n')
         candidates = []
         
         # Strategy 1: Look for lines with "total" keywords
@@ -267,10 +267,26 @@ class EnhancedOCREngine:
         Clean and convert amount string to float.
         """
         try:
+            # If there are spaces between digits, it might be two numbers (e.g. "2 470.00")
+            # We should take the last part if it looks like a valid amount
+            if ' ' in amount_str:
+                parts = amount_str.split()
+                # Try the last part first
+                last_part = parts[-1]
+                # Check if last part is a valid number (allowing commas and dots)
+                if re.match(r'^\d+(?:,\d{3})*(?:\.\d{2})?$', last_part.replace(',', '')):
+                    amount_str = last_part
+            
             # Remove currency symbols and spaces
             cleaned = re.sub(r'[^\d,.]', '', amount_str)
             # Remove commas
             cleaned = cleaned.replace(',', '')
+            
+            # Handle cases where there are multiple dots (e.g. 1.234.56) - keep only the last one
+            if cleaned.count('.') > 1:
+                parts = cleaned.split('.')
+                cleaned = "".join(parts[:-1]) + "." + parts[-1]
+            
             # Convert to float
             amount = float(cleaned)
             return amount
@@ -281,9 +297,20 @@ class EnhancedOCREngine:
         """
         Intelligently extract or generate transaction description.
         """
-        lines = [line.strip() for line in text.split('\n') if line.strip()]
+        lines = [line.strip() for line in text.split('\\n') if line.strip()]
         
-        # Strategy 1: Look for merchant/vendor name
+        # Strategy 1: Look for known merchants (High Priority)
+        known_merchants = [
+            'Zomato', 'Swiggy', 'Uber', 'Ola', 'Amazon', 'Flipkart', 'Myntra', 'Ajio',
+            'Starbucks', 'McDonalds', 'KFC', 'Dominos', 'Pizza Hut', 'Burger King',
+            'Subway', 'Dmart', 'BigBasket', 'Blinkit', 'Zepto', 'Dunzo'
+        ]
+        
+        for merchant in known_merchants:
+            if merchant.lower() in text.lower():
+                return merchant
+        
+        # Strategy 2: Look for merchant/vendor name
         for pattern in self.merchant_patterns:
             match = re.search(pattern, text, re.IGNORECASE | re.MULTILINE)
             if match:
@@ -293,12 +320,12 @@ class EnhancedOCREngine:
                 if 3 < len(merchant) < 50:
                     return merchant
         
-        # Strategy 2: Look for first meaningful line (not date, not amount)
+        # Strategy 3: Look for first meaningful line (not date, not amount)
         for line in lines[:5]:  # Check first 5 lines
             line_lower = line.lower()
             
             # Skip if line is just numbers or very short
-            if len(line) < 5 or line.isdigit():
+            if len(line) < 4 or line.isdigit():
                 continue
             
             # Skip if line contains only date
@@ -312,10 +339,10 @@ class EnhancedOCREngine:
             
             # This is likely a good description
             cleaned = re.sub(r'\s+', ' ', line)
-            if len(cleaned) > 5:
+            if len(cleaned) > 4:
                 return cleaned[:100]  # Max 100 chars
         
-        # Strategy 3: Look for transaction type in text
+        # Strategy 4: Look for transaction type in text
         transaction_types = {
             'payment': 'Payment Transaction',
             'transfer': 'Fund Transfer',
@@ -324,12 +351,9 @@ class EnhancedOCREngine:
             'purchase': 'Purchase',
             'refund': 'Refund',
             'food': 'Food Order',
-            'uber': 'Cab Service',
-            'ola': 'Cab Service',
-            'zomato': 'Food Delivery',
-            'swiggy': 'Food Delivery',
-            'amazon': 'Online Shopping',
-            'flipkart': 'Online Shopping'
+            'cab': 'Cab Service',
+            'trip': 'Trip',
+            'ride': 'Ride'
         }
         
         text_lower = text.lower()
@@ -337,7 +361,7 @@ class EnhancedOCREngine:
             if keyword in text_lower:
                 return description
         
-        # Strategy 4: Default description
+        # Strategy 5: Default description
         return "Transaction"
     
     def detect_transaction_type(self, text: str, description: str) -> str:
