@@ -10,6 +10,14 @@ from typing import List, Dict, Optional
 import pytesseract
 from PIL import Image, ImageEnhance, ImageFilter
 import io
+import os
+import platform
+
+# Set Tesseract Path for Windows
+if platform.system() == "Windows":
+    tesseract_path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+    if os.path.exists(tesseract_path):
+        pytesseract.pytesseract.tesseract_cmd = tesseract_path
 
 class EnhancedOCREngine:
     """
