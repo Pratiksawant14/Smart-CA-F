@@ -95,13 +95,11 @@ class EnhancedOCREngine:
         
         return image
     
-    def extract_text(self, image_file) -> str:
+    def extract_text(self, image: Image.Image) -> str:
         """
         Extract text from image with preprocessing and Multi-PSM strategy.
         """
         try:
-            image = Image.open(io.BytesIO(image_file.read()))
-            
             # Preprocess
             processed_image = self.preprocess_image(image)
             
@@ -398,13 +396,17 @@ class EnhancedOCREngine:
         Main method: Extract all transaction details from image.
         Returns list of transactions with date, description, amount, type.
         """
-        # Read file content once
-        file_content = image_file.read()
+        try:
+            # Read file content once and create Image object
+            file_content = image_file.read()
+            image = Image.open(io.BytesIO(file_content))
+        except Exception as e:
+            print(f"Error opening image file: {e}")
+            return []
         
         # Try 1: With Preprocessing
         print("OCR Try 1: With Preprocessing")
-        image_file.seek(0)
-        text = self.extract_text(image_file)
+        text = self.extract_text(image)
         
         amount = self.extract_total_amount(text)
         
@@ -412,8 +414,7 @@ class EnhancedOCREngine:
         if not amount:
             print("OCR Try 2: Raw Image (Preprocessing failed to find amount)")
             try:
-                image = Image.open(io.BytesIO(file_content))
-                # Use simple config
+                # Use simple config on raw image
                 text_raw = pytesseract.image_to_string(image)
                 text = text_raw # Update text to use raw text
                 amount = self.extract_total_amount(text)
