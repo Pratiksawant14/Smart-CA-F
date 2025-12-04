@@ -31,7 +31,8 @@ if not SUPABASE_URL or not SUPABASE_SERVICE_KEY:
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
 # Load the trained ML model
-MODEL_PATH = 'transaction_categorizer.joblib'
+# Load the trained ML model
+MODEL_PATH = os.path.join(os.path.dirname(__file__), 'transaction_categorizer.joblib')
 try:
     ml_model = joblib.load(MODEL_PATH)
     print("✅ ML Model loaded successfully!")

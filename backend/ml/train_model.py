@@ -4,6 +4,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import Pipeline
 import joblib
+import os
 
 def create_training_data():
     # We train on specific items AND vendor names
@@ -118,8 +119,13 @@ def train_model():
     model_pipeline.fit(X, y)
     print("✓ Universal Model trained successfully.")
     
-    joblib.dump(model_pipeline, 'transaction_categorizer.joblib')
-    print("✓ Model saved as 'transaction_categorizer.joblib'")
+    # Save model to the same directory as this script (backend/ml) -> up one level -> backend
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    backend_dir = os.path.dirname(current_dir)
+    model_path = os.path.join(backend_dir, 'transaction_categorizer.joblib')
+    
+    joblib.dump(model_pipeline, model_path)
+    print(f"✓ Model saved as '{model_path}'")
 
 if __name__ == '__main__':
     train_model()

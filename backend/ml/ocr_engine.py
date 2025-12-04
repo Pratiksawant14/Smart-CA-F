@@ -163,7 +163,7 @@ class EnhancedOCREngine:
         Intelligently extract the TOTAL/MAIN amount, not individual items.
         This is the most critical function.
         """
-        lines = text.split('\\n')
+        lines = text.split('\n')
         candidates = []
         
         # Strategy 1: Look for lines with "total" keywords
@@ -297,7 +297,7 @@ class EnhancedOCREngine:
         """
         Intelligently extract or generate transaction description.
         """
-        lines = [line.strip() for line in text.split('\\n') if line.strip()]
+        lines = [line.strip() for line in text.split('\n') if line.strip()]
         
         # Strategy 1: Look for known merchants (High Priority)
         known_merchants = [

@@ -16,10 +16,14 @@ IMAGE_PATHS = [
 ]
 
 # Load Model
-MODEL_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'transaction_categorizer.joblib')
+# Standardized path: backend/transaction_categorizer.joblib
+current_dir = os.path.dirname(os.path.abspath(__file__))
+backend_dir = os.path.dirname(current_dir)
+MODEL_PATH = os.path.join(backend_dir, 'transaction_categorizer.joblib')
+
 try:
     ml_model = joblib.load(MODEL_PATH)
-    print("Model loaded.")
+    print(f"Model loaded from: {MODEL_PATH}")
 except Exception as e:
     print(f"Error loading model: {e}")
     ml_model = None
